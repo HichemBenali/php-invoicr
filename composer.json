@@ -16,12 +16,12 @@
   ],
   "require": {
     "php": ">=7.0",
-    "mpdf/mpdf": "*",
-    "laminas/laminas-escaper": "2.x",
-    "myclabs/deep-copy": "1.x",
-    "paragonie/random_compat": "1.x",
-    "phpoffice/phpword": "1.x",
-    "setasign/fpdi": "2.x"
+    "mpdf/mpdf": "8.*",
+    "laminas/laminas-escaper": "2.*",
+    "myclabs/deep-copy": "1.*",
+    "paragonie/random_compat": "1.*",
+    "phpoffice/phpword": "1.*",
+    "setasign/fpdi": "2.*"
   },
 
   "autoload": {
