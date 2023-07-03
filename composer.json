@@ -1,6 +1,6 @@
 {
   "name": "hichembenali/php-invoicr",
-  "description": "PHP Invoice generator",
+  "description": "Invoicr is a free and open-source PHP invoice generator that is capable of churning out HTML, PDF, DOCX, and PNG invoices. It is a simple fuss-free package that will give developers a quick boost with their invoice generation needs.",
   "minimum-stability": "dev",
   "license": "MIT",
   "authors": [
