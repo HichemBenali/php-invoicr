@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": ">=5.3.0",
+    "php": ">=7.0",
     "mpdf/mpdf": "*",
     "laminas/laminas-escaper": "2.x",
     "myclabs/deep-copy": "1.x",
