@@ -1,6 +1,11 @@
 <?php
 
 namespace PHPInvoicr;
+use Mpdf\Mpdf;
+
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
+
 class Invoicr {
   /*** [PART 1] INVOICR DATA ***/
   // (A) FILE PATHS
@@ -168,7 +173,7 @@ class Invoicr {
   //         3 = save on server (provide the absolute path and file name in $save)
   // $save : output filename
   function outputPDF ($mode=1, $save="invoice.pdf") {
-    $mpdf = new \Mpdf\Mpdf();
+    $mpdf = new Mpdf;
 
     // (H2) LOAD TEMPLATE FILE
     $file = $this->pathP . $this->template . ".php";
@@ -200,7 +205,7 @@ class Invoicr {
   //          2 = save on server (provide the absolute path and file name in $save)
   //  $save : output filename
   function outputDOCX ($mode=1, $save="invoice.docx") {
-    $pw = new \PhpOffice\PhpWord\PhpWord();
+    $pw = new PhpWord();
 
     // (I2) LOAD TEMPLATE FILE
     $file = $this->pathD . $this->template . ".php";
@@ -213,7 +218,7 @@ class Invoicr {
       // (I3-1) FORCE DOWNLOAD
       default: case 1:
         $this->outputDown($save);
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($pw, "Word2007");
+        $objWriter = IOFactory::createWriter($pw, "Word2007");
         $objWriter->save("php://output");
         break;
 

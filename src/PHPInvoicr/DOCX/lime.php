@@ -22,10 +22,10 @@ for ($i=2;$i<count($this->company);$i++) {
 $cell = $table->addCell(2500);
 $cell->addText("SALES INVOICE",
 	["color"=>"bcd030", "bold"=>true, "size"=>20],
-	["spaceAfter" => 10, "spaceBefore"=>0, "alignment" => \PhpOffice\PhpWord\SimpleType\Jc::RIGHT]
+	["spaceAfter" => 10, "spaceBefore"=>0, "alignment" => SimpleType\Jc::RIGHT]
 );
 foreach ($this->head as $i) {
-	$textrun = $cell->addTextRun(["spaceAfter" => 0, "spaceBefore"=>0, "alignment" => \PhpOffice\PhpWord\SimpleType\Jc::RIGHT]);
+	$textrun = $cell->addTextRun(["spaceAfter" => 0, "spaceBefore"=>0, "alignment" => SimpleType\Jc::RIGHT]);
 	$textrun->addText($i[0].": ",["bold"=>true]);
 	$textrun->addText($i[1]);
 }
