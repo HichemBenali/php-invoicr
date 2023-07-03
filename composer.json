@@ -7,6 +7,11 @@
     {
       "name": "Hichem Benali",
       "email": "hichem.benali@email.com"
+    },
+
+    {
+      "name": "Code Boxx",
+      "email": "code-boxx@github.com"
     }
   ],
   "require": {
