@@ -2,6 +2,7 @@
 
 namespace PHPInvoicr;
 
+use http\Exception;
 use Mpdf\Mpdf;
 
 use PhpOffice\PhpWord\IOFactory;
@@ -51,6 +52,9 @@ class Invoicr
 
     /** @var array Notes */
     public $notes = [];
+
+    /** @var bool Use vendor's templates */
+    private $vendorTemplate = true;
 
 
     /**
@@ -118,12 +122,14 @@ class Invoicr
     /**
      * Sets the invoice template
      *
-     * @param string $template
+     * @param string $template Template name or path
+     * @param boolean $vendor Use Vendor's templates (set to false to use custom paths)
      * @return void
      */
-    function template($template = "simple")
+    function template(string $template = "simple", bool $vendor = true)
     {
         $this->template = $template;
+        $this->vendorTemplate = $vendor;
     }
 
     /**
@@ -147,90 +153,6 @@ class Invoicr
 
 
     /**
-     * Output the invoice in HTML
-     *
-     * @param int $mode 1: show in browser, 2: force download, 3: save on server, 4: show in browser + save png
-     * @param string $save output filename.
-     * @return void
-     */
-    function outputHTML($mode = 1, $save = null)
-    {
-        // (G1) TEMPLATE FILE CHECK
-        $fileCSS = $this->pathH . $this->template . ".css";
-        $fileHTML = $this->pathH . $this->template . ".php";
-        if (!file_exists($fileCSS)) {
-            exit("$fileCSS not found.");
-        }
-        if (!file_exists($fileHTML)) {
-            exit("$fileHTML not found.");
-        }
-
-        // (G2) GENERATE HTML INTO BUFFER
-        ob_start(); ?>
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <style><?php readfile($fileCSS); ?></style>
-            <?php if ($mode == 4) { ?>
-                <script src="invlib/html2canvas.min.js"></script>
-                <script>window.onload = () => html2canvas(document.getElementById("invoice")).then(canvas => {
-                        let a = document.createElement("a");
-                        <?php if ($save === null) {
-                        $save = "invoice-" . strtotime("now") . ".png";
-                    } ?>
-                        a.download = "<?=$save?>";
-                        a.href = canvas.toDataURL("image/png");
-                        a.click();
-                    });</script>
-            <?php } ?>
-        </head>
-        <body>
-        <div id="invoice"><?php require $fileHTML; ?></div>
-        </body>
-        </html>
-        <?php
-        $this->data = ob_get_contents();
-        ob_end_clean();
-
-        // (G3) OUTPUT HTML
-        switch ($mode) {
-            // (G3-1) OUTPUT ON SCREEN (SAVE TO PNG)
-            default:
-            case 1:
-            case 4:
-                echo $this->data;
-                break;
-
-            // (G3-2) FORCE DOWNLOAD
-            case 2:
-                if ($save === null) {
-                    $save = "invoice-" . strtotime("now") . ".html";
-                }
-                $this->outputDown($save, strlen($this->data));
-                echo $this->data;
-                break;
-
-            // (G3-3) SAVE TO FILE ON SERVER
-            case 3:
-                if ($save === null) {
-                    $save = "invoice-" . strtotime("now") . ".html";
-                }
-                $stream = @fopen($save, "w");
-                if (!$stream) {
-                    exit("Error opening the file " . $save);
-                } else {
-                    fwrite($stream, $this->data);
-                    if (!fclose($stream)) {
-                        exit("Error closing " . $save);
-                    }
-                }
-                break;
-        }
-    }
-
-
-    /**
      * Output to PDF File
      *
      * @param int $mode modes: 1: show in browser, 2: force download, 3: save on server
@@ -243,7 +165,9 @@ class Invoicr
         $mpdf = new Mpdf;
 
         // (H2) LOAD TEMPLATE FILE
-        $file = $this->pathP . $this->template . ".php";
+        $file = $this->vendorTemplate
+            ? $this->pathP . $this->template . ".php"
+            : $this->template;
         if (!file_exists($file)) {
             exit("$file not found.");
         }
@@ -283,7 +207,9 @@ class Invoicr
         $pw = new PhpWord();
 
         // (I2) LOAD TEMPLATE FILE
-        $file = $this->pathD . $this->template . ".php";
+        $file = $this->vendorTemplate
+            ? $this->pathD . $this->template . ".php"
+            : $this->template;
         if (!file_exists($file)) {
             exit("$file not found.");
         }
